@@ -2,6 +2,8 @@ package org.coupon.couponsunbbang.domain.order.reference.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,8 +32,9 @@ public class CouponIssueRef {
 	@Column(name = "coupon_master_id", nullable = false)
 	private Long couponMasterId;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
-	private String status;
+	private CouponIssueRefStatus status;
 
 	@CreationTimestamp
 	@Column(name = "created_at")

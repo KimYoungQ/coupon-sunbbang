@@ -42,6 +42,37 @@ public class Order {
 	@CreationTimestamp
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
+
+	/**
+	 * 주문 엔티티를 생성하는 메서드입니다.
+	 *
+	 * @param userId 유저 ID
+	 * @param productId 상품 ID
+	 * @param couponIssueId 쿠폰이슈 ID
+	 * @param quantity 수량
+	 * @param originalPrice 초기 금액
+	 * @param discountPrice 할인 금액
+	 * @param finalPrice 최종 금액
+	 */
+	public static Order create(
+			Long userId,
+			Long productId,
+			Long couponIssueId,
+			Integer quantity,
+			BigDecimal originalPrice,
+			BigDecimal discountPrice,
+			BigDecimal finalPrice
+	) {
+		Order order = new Order();
+		order.userId = userId;
+		order.productId = productId;
+		order.couponIssueId = couponIssueId;
+		order.quantity = quantity;
+		order.originalPrice = originalPrice;
+		order.discountPrice = discountPrice;
+		order.finalPrice = finalPrice;
+		return order;
+	}
 }
 
 
