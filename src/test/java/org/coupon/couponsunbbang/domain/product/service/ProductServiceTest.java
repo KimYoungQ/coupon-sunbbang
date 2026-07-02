@@ -2,7 +2,6 @@ package org.coupon.couponsunbbang.domain.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -23,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -38,8 +38,8 @@ class ProductServiceTest {
 		// given
 		int page = 0;
 		int size = 10;
-		Product firstProduct = createMockProduct(1L, "테스트 상품 1", "1000.00", LocalDateTime.of(2026, 7, 2, 10, 0));
-		Product secondProduct = createMockProduct(2L, "테스트 상품 2", "2000.00", LocalDateTime.of(2026, 7, 2, 11, 0));
+		Product firstProduct = createProduct(1L, "테스트 상품 1", "1000.00", LocalDateTime.of(2026, 7, 2, 10, 0));
+		Product secondProduct = createProduct(2L, "테스트 상품 2", "2000.00", LocalDateTime.of(2026, 7, 2, 11, 0));
 		PageRequest pageRequest = PageRequest.of(page, size);
 
 		when(productRepository.findAll(pageRequest)).thenReturn(
@@ -68,7 +68,7 @@ class ProductServiceTest {
 		// given
 		Long productId = 1L;
 		LocalDateTime createdAt = LocalDateTime.of(2026, 7, 2, 10, 0);
-		Product product = createMockProduct(productId, "테스트 상품", "1000.00", createdAt);
+		Product product = createProduct(productId, "테스트 상품", "1000.00", createdAt);
 
 		when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
@@ -99,12 +99,12 @@ class ProductServiceTest {
 		assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.PRODUCT_NOT_FOUND);
 	}
 
-	private Product createMockProduct(Long productId, String title, String price, LocalDateTime createdAt) {
-		Product product = mock(Product.class);
-		when(product.getId()).thenReturn(productId);
-		when(product.getTitle()).thenReturn(title);
-		when(product.getPrice()).thenReturn(new BigDecimal(price));
-		when(product.getCreatedAt()).thenReturn(createdAt);
+	private Product createProduct(Long productId, String title, String price, LocalDateTime createdAt) {
+		Product product = new Product();
+		ReflectionTestUtils.setField(product, "id", productId);
+		ReflectionTestUtils.setField(product, "title", title);
+		ReflectionTestUtils.setField(product, "price", new BigDecimal(price));
+		ReflectionTestUtils.setField(product, "createdAt", createdAt);
 		return product;
 	}
 }
