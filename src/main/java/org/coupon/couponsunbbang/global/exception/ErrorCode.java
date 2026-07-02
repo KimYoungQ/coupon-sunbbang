@@ -14,6 +14,7 @@ public enum ErrorCode {
 
     // 커스텀 에러
     RESOURCE_NOT_FOUND("RESOURCE_NOT_FOUND", "resouce not found", HttpStatus.NOT_FOUND),
+    PRODUCT_NOT_FOUND("PRODUCT_NOT_FOUND", "상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     DUPLICATE_RESOURCE("DUPLICATE_RESOURCE", "duplicate resource", HttpStatus.CONFLICT),
     VALIDATION_ERROR("VALIDATION_ERROR", "검증 에러", HttpStatus.BAD_REQUEST),
     INVALID_PAGE("INVALID_PAGE", "페이지 검증 에러", HttpStatus.BAD_REQUEST),
@@ -26,4 +27,3 @@ public enum ErrorCode {
     private final String message;
     private final HttpStatus httpStatus;
 }
-
