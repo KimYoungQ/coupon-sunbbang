@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
+    // QueryDSL은 EventQueryRepository에서 처리
 
     // 단건 조회: 삭제되지 않은 이벤트
     @Query("SELECT e FROM Event e WHERE e.id = : id AND e.deletedAt IS NULL")
