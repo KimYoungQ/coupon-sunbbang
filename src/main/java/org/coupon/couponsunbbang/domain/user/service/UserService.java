@@ -1,10 +1,14 @@
 package org.coupon.couponsunbbang.domain.user.service;
 
+import org.coupon.couponsunbbang.global.exception.BusinessException;
+import org.coupon.couponsunbbang.global.exception.ErrorCode;
+
 import lombok.RequiredArgsConstructor;
 import org.coupon.couponsunbbang.domain.user.dto.SignupRequest;
 import org.coupon.couponsunbbang.domain.user.dto.SignupResponse;
 import org.coupon.couponsunbbang.domain.user.entity.User;
 import org.coupon.couponsunbbang.domain.user.repository.UserRepository;
+import org.coupon.couponsunbbang.global.exception.BusinessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +23,10 @@ public class UserService {
     // 회원가입 메서드
     public SignupResponse signup(SignupRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            throw new BusinessException(
+                    ErrorCode.DUPLICATE_RESOURCE,
+                    "이미 사용 중인 이메일입니다."
+            );
         }
 
         // 사용자가 입력한 원문 비밀번호를 암호화

@@ -45,13 +45,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleValidationException(
             MethodArgumentNotValidException e
     ) {
-        ErrorCode errorCode = ErrorCode.VALIDATION_ERROR;
 
-        log.warn("검증 예외 발생: {}", e.getMessage());
+        ErrorCode errorCode = ErrorCode.VALIDATION_ERROR;
+        String message = e.getBindingResult().getFieldError() != null
+                ? e.getBindingResult().getFieldError().getDefaultMessage()
+                : errorCode.getMessage();
+
+        log.warn("검증 예외 발생: {}", message);
 
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(ApiResponse.error(errorCode.getCode(), errorCode.getMessage()));
+                .body(ApiResponse.error(errorCode.getCode(), message));
     }
 
     /**
