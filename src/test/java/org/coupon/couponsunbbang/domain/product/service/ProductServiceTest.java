@@ -21,6 +21,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -34,13 +36,18 @@ class ProductServiceTest {
 	@DisplayName("상품 목록을 조회하면 상품 응답 목록을 반환한다")
 	void getProducts() {
 		// given
+		int page = 0;
+		int size = 10;
 		Product firstProduct = createMockProduct(1L, "테스트 상품 1", "1000.00", LocalDateTime.of(2026, 7, 2, 10, 0));
 		Product secondProduct = createMockProduct(2L, "테스트 상품 2", "2000.00", LocalDateTime.of(2026, 7, 2, 11, 0));
+		PageRequest pageRequest = PageRequest.of(page, size);
 
-		when(productRepository.findAll()).thenReturn(List.of(firstProduct, secondProduct));
+		when(productRepository.findAll(pageRequest)).thenReturn(
+				new PageImpl<>(List.of(firstProduct, secondProduct), pageRequest, 12)
+		);
 
 		// when
-		ProductListResponse response = productService.getProducts();
+		ProductListResponse response = productService.getProducts(page, size);
 
 		// then
 		assertThat(response.products()).hasSize(2);
@@ -48,6 +55,11 @@ class ProductServiceTest {
 		assertThat(response.products().get(0).title()).isEqualTo("테스트 상품 1");
 		assertThat(response.products().get(0).price()).isEqualByComparingTo("1000.00");
 		assertThat(response.products().get(1).productId()).isEqualTo(2L);
+		assertThat(response.page()).isEqualTo(0);
+		assertThat(response.size()).isEqualTo(10);
+		assertThat(response.totalElements()).isEqualTo(12);
+		assertThat(response.totalPages()).isEqualTo(2);
+		assertThat(response.hasNext()).isTrue();
 	}
 
 	@Test
